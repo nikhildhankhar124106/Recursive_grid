@@ -28,12 +28,12 @@ export default function Home() {
                         return (
                             <div
                                 key={`${rowIndex}-${colIndex}`}
-                                onClick={() => handleCellClick(rowIndex, colIndex)}
+                                onClick={() => !locked && handleCellClick(rowIndex, colIndex)}
                                 className={`
                   w-24 h-24 flex items-center justify-center 
-                  text-2xl font-bold select-none cursor-pointer transition-transform active:scale-95
-                  ${locked ? 'bg-red-500 text-white' :
-                                        value % 2 === 0 ? 'bg-gray-200 text-black' : 'bg-indigo-900 text-white'}
+                  text-2xl font-bold select-none transition-transform active:scale-95
+                  ${locked ? 'bg-red-500 text-white cursor-not-allowed opacity-90' :
+                                        value % 2 === 0 ? 'cursor-pointer bg-gray-200 text-black' : 'cursor-pointer bg-indigo-900 text-white'}
                 `}
                                 style={{
                                     borderRadius: '4px',

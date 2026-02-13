@@ -32,10 +32,14 @@ export function updateGrid(grid, row, col) {
         return grid;
     }
 
+    // Logic Change: Check locked state on ORIGINAL grid
+    if (isLocked(grid[row][col])) {
+        return grid; // Locked cells cannot be modified
+    }
+
     // Clone grid
     const newGrid = grid.map(r => [...r]);
 
-    // Logic Change: Allow interaction even if locked (>= 15)
     // Logic Change: Negative number click -> Decrement
     if (newGrid[row][col] < 0) {
         newGrid[row][col] -= 1;
@@ -51,24 +55,21 @@ export function updateGrid(grid, row, col) {
     if (newValue !== 0 && newValue % 3 === 0) {
         const rightCol = col + 1;
         if (isValidPosition(row, rightCol)) {
-            newGrid[row][rightCol] -= 1;
+            // Ripple shouldn't affect locked cells (though dependent on design, commonly it doesn't)
+            if (!isLocked(newGrid[row][rightCol])) {
+                newGrid[row][rightCol] -= 1;
+            }
         }
     }
 
-    // Logic Change: Divisible by 5 -> Increment ALL neighbors by 2
+    // Logic Change: Divisible by 5 -> Increment ONLY BELOW by 2
     if (newValue !== 0 && newValue % 5 === 0) {
-        const neighbors = [
-            { r: row - 1, c: col }, // Up
-            { r: row + 1, c: col }, // Down
-            { r: row, c: col - 1 }, // Left
-            { r: row, c: col + 1 }  // Right
-        ];
-
-        neighbors.forEach(({ r, c }) => {
-            if (isValidPosition(r, c)) {
-                newGrid[r][c] += 2;
+        const belowRow = row + 1;
+        if (isValidPosition(belowRow, col)) {
+            if (!isLocked(newGrid[belowRow][col])) {
+                newGrid[belowRow][col] += 2;
             }
-        });
+        }
     }
 
     return newGrid;

@@ -47,25 +47,71 @@ export function updateGrid(grid, row, col) {
 
     const newValue = newGrid[row][col];
 
-    // Ripple Rules
+    // Ripple Rules with Chaining Support
 
     // Divisible by 3 -> Decrement RIGHT neighbor
+    // Note: 0 is excluded to prevent unintended ripples
     if (newValue !== 0 && newValue % 3 === 0) {
         const rightCol = col + 1;
         if (isValidPosition(row, rightCol)) {
-            // Ripple shouldn't affect locked cells (though dependent on design, commonly it doesn't)
+            // Ripple shouldn't affect locked cells
             if (!isLocked(newGrid[row][rightCol])) {
                 newGrid[row][rightCol] -= 1;
+
+                // Ripple Chaining Level 1: Check if the modified neighbor is now divisible by 5
+                const neighborValue = newGrid[row][rightCol];
+                if (neighborValue !== 0 && neighborValue % 5 === 0) {
+                    const belowRow = row + 1;
+                    if (isValidPosition(belowRow, rightCol)) {
+                        if (!isLocked(newGrid[belowRow][rightCol])) {
+                            newGrid[belowRow][rightCol] += 2;
+                        }
+                    }
+                }
+
+                // Ripple Chaining Level 1: Check if the modified neighbor is now divisible by 3
+                if (neighborValue !== 0 && neighborValue % 3 === 0) {
+                    const rightCol2 = rightCol + 1;
+                    if (isValidPosition(row, rightCol2)) {
+                        if (!isLocked(newGrid[row][rightCol2])) {
+                            newGrid[row][rightCol2] -= 1;
+                        }
+                    }
+                }
             }
         }
     }
 
-    // Logic Change: Divisible by 5 -> Increment ONLY BELOW by 2
+    // Divisible by 5 -> Increment ONLY BELOW by 2
+    // Works for both positive (5, 10, 15) and negative (-5, -10, -15) multiples
+    // Note: 0 is excluded to prevent unintended ripples
     if (newValue !== 0 && newValue % 5 === 0) {
         const belowRow = row + 1;
         if (isValidPosition(belowRow, col)) {
             if (!isLocked(newGrid[belowRow][col])) {
                 newGrid[belowRow][col] += 2;
+
+                // Ripple Chaining: Check if the modified neighbor is now divisible by 3
+                const belowValue = newGrid[belowRow][col];
+                if (belowValue !== 0 && belowValue % 3 === 0) {
+                    const rightCol = col + 1;
+                    if (isValidPosition(belowRow, rightCol)) {
+                        if (!isLocked(newGrid[belowRow][rightCol])) {
+                            newGrid[belowRow][rightCol] -= 1;
+
+                            // Deeper chaining: Check if this creates another -3
+                            const rightValue = newGrid[belowRow][rightCol];
+                            if (rightValue !== 0 && rightValue % 3 === 0) {
+                                const rightCol2 = rightCol + 1;
+                                if (isValidPosition(belowRow, rightCol2)) {
+                                    if (!isLocked(newGrid[belowRow][rightCol2])) {
+                                        newGrid[belowRow][rightCol2] -= 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

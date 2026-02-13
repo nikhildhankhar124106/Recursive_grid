@@ -2,19 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-[#050510] text-gray-100 min-h-screen selection:bg-yellow-500/30;
+    background: radial-gradient(circle at center, #1a1a3a 0%, #050510 100%);
+    font-family: 'Inter', system-ui, sans-serif;
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
+@layer components {
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl;
+  }
+
+  .glass-panel {
+    @apply bg-black/40 backdrop-blur-md border border-white/10;
+  }
+
+  .gold-text {
+    @apply bg-clip-text text-transparent bg-gradient-to-b from-yellow-100 via-yellow-400 to-yellow-600 font-bold;
+  }
+
+  .gold-border {
+    @apply border border-yellow-500/40;
+  }
+
+  .premium-button {
+    @apply px-10 py-4 bg-gradient-to-b from-yellow-400 to-yellow-600 text-black font-extrabold uppercase tracking-[0.2em] rounded-none transition-all duration-500 hover:scale-105 active:scale-95 border-none;
+  }
+
+  .premium-button:hover {
+    box-shadow: 0 0 30px rgba(234, 179, 8, 0.5);
+  }
+
+  .cell-transition {
+    @apply transition-all duration-300 ease-in-out hover:scale-110 hover:-translate-y-1;
+  }
+
+  .locked-pulse {
+    animation: lock-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes lock-pulse {
+
+    0%,
+    100% {
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+      border-color: rgba(239, 68, 68, 0.5);
+    }
+
+    50% {
+      box-shadow: 0 0 30px rgba(239, 68, 68, 0.7);
+      border-color: rgb(239, 68, 68);
+    }
+  }
 }

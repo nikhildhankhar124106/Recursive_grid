@@ -28,12 +28,12 @@ describe('updateGrid', () => {
     });
 
     describe('Modified Logic: Negative Numbers', () => {
-        it('should decrement if value is negative', () => {
+        it('should INCREMENT (not decrement) if value is negative', () => {
             // Setup: -1 at (0,0)
             let grid = [[-1, 0, 0], [0, 0, 0], [0, 0, 0]];
-            // Click (should go to -2)
+            // Click (should go to 0, not -2)
             grid = updateGrid(grid, 0, 0);
-            expect(grid[0][0]).toBe(-2);
+            expect(grid[0][0]).toBe(0);
         });
 
         it('should increment if value is 0 or positive', () => {

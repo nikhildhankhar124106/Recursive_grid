@@ -40,12 +40,10 @@ export function updateGrid(grid, row, col) {
     // Clone grid
     const newGrid = grid.map(r => [...r]);
 
-    // Logic Change: Negative number click -> Decrement
-    if (newGrid[row][col] < 0) {
-        newGrid[row][col] -= 1;
-    } else {
-        newGrid[row][col] += 1;
-    }
+    // Logic Change: Allow interaction even if locked (>= 15)
+    // Logic Change: Negative number click -> Increment (Unified)
+    // Previously it was decrement, but user requested to change it to increment.
+    newGrid[row][col] += 1;
 
     const newValue = newGrid[row][col];
 
